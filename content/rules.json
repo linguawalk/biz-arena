@@ -1,0 +1,15 @@
+{
+ "schema_version": "1.0",
+ "note": "바뀔 수 있는 법정·제도 수치를 한곳에서 관리합니다. 레슨 빌더는 tools/rules.py의 rv()로 이 값을 불러오고, 사용한 레슨에 review 정보가 붙습니다. 값을 바꾼 뒤에는 해당 챕터를 다시 빌드하세요.",
+ "rules": {
+  "min_wage_hourly": {
+   "label": "최저임금 시간급",
+   "value": 10320, "unit": "원",
+   "effective": "2026-01-01",
+   "next": {"value": 10700, "effective": "2027-01-01"},
+   "review_by": "2027-01-01",
+   "source": "고용노동부 최저임금 고시 (2026년 10,320원, 2027년 10,700원 결정)",
+   "url": "https://www.minimumwage.go.kr/"
+  }
+ }
+}
