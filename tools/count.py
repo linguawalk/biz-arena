@@ -9,3 +9,7 @@ for k in sorted(x for x in ns if re.fullmatch(r"L\d", x)):
     ok = 20 <= len(sc) <= 24 and 15 <= q <= 17 and e == 3
     print(k, "화면", len(sc), "문항", q, "예제", e, "설명", sum(s["type"] == "explain" for s in sc), "" if ok else "  <-- 확인")
 print("복습", len(ns["REVIEW"]))
+allq = [s for k in ns if re.fullmatch(r"L\d", k) for s in ns[k]["screens"] if s["type"] == "question"] + ns["REVIEW"]
+for q in allq:
+    if q["qtype"] != "written" and len(q.get("explanation") or "") < 20: print("  풀이 짧음:", q["id"], q["explanation"])
+    if q["qtype"] == "fill_blank" and q["prompt"].count("{{") != len(q["blanks"]): print("  빈칸 수:", q["id"])
