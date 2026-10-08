@@ -12,7 +12,7 @@
       "id": "c2",
       "title": "금융생활",
       "description": "소득과 지출, 화폐의 시간가치, 저축과 투자, 신용과 부채, 보험과 연금, 금융 소비자 보호",
-      "available": false
+      "available": true
     },
     {
       "id": "c3",
