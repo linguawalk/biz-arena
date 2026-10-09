@@ -30,7 +30,7 @@
       "id": "c5",
       "title": "회계 실무",
       "description": "증빙과 전표, 매입·매출과 부가세, 급여, 결산 실무, 원가 계산, 재무제표 분석",
-      "available": false
+      "available": true
     },
     {
       "id": "c6",
