@@ -50,6 +50,12 @@ def run_page(page, url, screens, label, errs):
             t = {it["id"]: it["text"] for it in q["items"]}
             page.evaluate(ORDER_JS, [t[i] for i in q["answer_order"]])
         elif qt == "written": page.fill("textarea", q["model_answer"])
+        elif qt == "journal":
+            sides = page.locator(".journal .side")
+            for si, key in enumerate(("debit", "credit")):
+                lines = sides.nth(si).locator(".line")
+                for k, (acc, amt) in enumerate(q["answer"][key][::-1]):  # 순서를 바꿔 넣어 순서 무관 채점 점검
+                    lines.nth(k).locator("select").select_option(acc); lines.nth(k).locator("input").fill(fmt_num(str(amt)))
         else: errs.append(f"{label} {q['id']}: 지원하지 않는 형식 {qt}");
         if btn.is_disabled(): errs.append(f"{label} {q['id']}: 확인 버튼 비활성"); return
         btn.click()

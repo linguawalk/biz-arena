@@ -55,6 +55,13 @@ def wr(i, stage, prompt, groups, model, hint=None, need=2):
             "model_answer": model}
 
 
+def jr(i, stage, prompt, debit, credit, expl, accounts, hint=None):
+    """분개 입력형. debit/credit: [(계정, 금액), ...], accounts: 선택지로 보일 계정 목록(정답 계정 포함)."""
+    return {"type": "question", "id": i, "stage": stage, "qtype": "journal", "prompt": prompt, "accounts": list(accounts),
+            "answer": {"debit": [[a, int(n)] for a, n in debit], "credit": [[a, int(n)] for a, n in credit]},
+            "hint": hint, "explanation": expl}
+
+
 def check_lesson(lid, screens):
     qs = [s for s in screens if s["type"] == "question"]
     egs = [s for s in screens if s["type"] == "example"]
@@ -76,6 +83,12 @@ def check_q(s, need_hint):
     if s["qtype"] != "written" and len(s.get("explanation") or "") < 20: e.append(f"{s['id']} 풀이 짧음")
     if need_hint and not s.get("hint"): e.append(f"{s['id']} 힌트 없음")
     if s["qtype"] == "fill_blank" and s["prompt"].count("{{") != len(s["blanks"]): e.append(f"{s['id']} 빈칸 수")
+    if s["qtype"] == "journal":
+        a = s["answer"]
+        if sum(n for _, n in a["debit"]) != sum(n for _, n in a["credit"]): e.append(f"{s['id']} 대차 불일치")
+        miss = {x for x, _ in a["debit"] + a["credit"]} - set(s["accounts"])
+        if miss: e.append(f"{s['id']} 선택지에 없는 계정 {miss}")
+        if len(s["accounts"]) < 4: e.append(f"{s['id']} 계정 선택지 4개 미만")
     return e
 
 

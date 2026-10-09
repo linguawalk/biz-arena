@@ -13,3 +13,7 @@ allq = [s for k in ns if re.fullmatch(r"L\d", k) for s in ns[k]["screens"] if s[
 for q in allq:
     if q["qtype"] != "written" and len(q.get("explanation") or "") < 20: print("  풀이 짧음:", q["id"], q["explanation"])
     if q["qtype"] == "fill_blank" and q["prompt"].count("{{") != len(q["blanks"]): print("  빈칸 수:", q["id"])
+    if q["qtype"] == "journal":
+        a = q["answer"]
+        if sum(n for _, n in a["debit"]) != sum(n for _, n in a["credit"]): print("  대차 불일치:", q["id"])
+        if {x for x, _ in a["debit"] + a["credit"]} - set(q["accounts"]): print("  선택지 계정 누락:", q["id"])
