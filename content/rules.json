@@ -103,6 +103,60 @@
    "review_by": "2027-01-01",
    "source": "국민연금법 개정(2025년 3월 국회 통과, 2026년 시행)",
    "url": "https://www.nps.or.kr/"
+  },
+  "vat_rate": {
+   "label": "부가가치세 일반 세율",
+   "value": 10,
+   "unit": "%",
+   "effective": "1977-07-01",
+   "review_by": "2027-01-01",
+   "source": "부가가치세법 제30조",
+   "url": "https://www.nts.go.kr/"
+  },
+  "meal_allowance_nontax": {
+   "label": "식대 비과세 한도(월)",
+   "value": 200000,
+   "unit": "원",
+   "effective": "2023-01-01",
+   "review_by": "2027-01-01",
+   "source": "소득세법 시행령 제17조의2",
+   "url": "https://www.nts.go.kr/"
+  },
+  "car_allowance_nontax": {
+   "label": "자가운전보조금 비과세 한도(월)",
+   "value": 200000,
+   "unit": "원",
+   "effective": "2001-01-01",
+   "review_by": "2027-01-01",
+   "source": "소득세법 시행령 제12조",
+   "url": "https://www.nts.go.kr/"
+  },
+  "local_income_tax_ratio": {
+   "label": "지방소득세(소득세에 대한 비율)",
+   "value": 10,
+   "unit": "%",
+   "effective": "2014-01-01",
+   "review_by": "2027-01-01",
+   "source": "지방세법",
+   "url": "https://www.wetax.go.kr/"
+  },
+  "qualified_receipt_threshold": {
+   "label": "적격증빙 수취 의무 기준(거래 건당, 초과 시)",
+   "value": 30000,
+   "unit": "원",
+   "effective": "2008-01-01",
+   "review_by": "2027-01-01",
+   "source": "법인세법 제116조, 소득세법 제160조의2",
+   "url": "https://www.nts.go.kr/"
+  },
+  "receipt_penalty_rate": {
+   "label": "증빙불비가산세율",
+   "value": 2,
+   "unit": "%",
+   "effective": "2008-01-01",
+   "review_by": "2027-01-01",
+   "source": "법인세법 제75조의5, 소득세법 제81조의6",
+   "url": "https://www.nts.go.kr/"
   }
  }
 }
