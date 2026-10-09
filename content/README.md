@@ -30,6 +30,10 @@
   - diagram: widget별 설정
     - number_line: config(min, max, step), answer.value, answer.tolerance
     - coordinate_plane: config(xmin, xmax, ymin, ymax, xstep, ystep), answer.x, answer.y, answer.tolerance
+  - journal(분개 입력형, biz-arena 추가): accounts(선택지 계정 목록), answer.debit / answer.credit([[계정, 금액], ...])
+    - 차변·대변 칸 수는 정답 줄 수와 같고, 칸마다 계정을 고르고 금액을 입력
+    - 채점: 차변·대변 각각 (계정, 금액) 쌍이 순서와 관계없이 정답과 같으면 통과
+    - 화면에 차변·대변 합계와 일치 여부를 바로 표시하고, 금액은 천 단위 쉼표 허용
   - written: rubric(visibility=hidden, keyword_groups, min_groups_matched), model_answer
     - 채점: 각 그룹 중 하나라도 포함되면 그룹 일치, 일치 그룹 수가 기준 이상이면 통과
     - rubric은 화면에 노출하지 않음
