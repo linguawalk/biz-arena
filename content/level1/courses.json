@@ -18,13 +18,13 @@
       "id": "c3",
       "title": "경영 기초",
       "description": "상업과 경제활동, 기업의 형태, 경영 관리, 조직과 인적자원, 생산, 재무 기초, ESG, 창업",
-      "available": false
+      "available": true
     },
     {
       "id": "c4",
       "title": "회계 원리",
       "description": "거래의 분석, 분개와 전기, 시산표와 결산, 재무제표, 자산·부채·자본",
-      "available": false
+      "available": true
     },
     {
       "id": "c5",
