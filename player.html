@@ -44,6 +44,17 @@ textarea{width:100%;min-height:140px;border:2px solid var(--grid-strong);border-
 .order li .t{flex:1}
 .order button{border:1px solid var(--grid-strong);background:var(--paper);border-radius:var(--radius-s);width:36px;height:36px;cursor:pointer;font-size:16px}
 .order button:disabled{opacity:.3;cursor:default}
+.journal{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.journal .side{background:#fff;border:2px solid var(--grid-strong);border-radius:var(--radius-s);padding:10px 12px}
+.journal .side h3{margin:0 0 8px;font-size:15px;color:var(--ink-soft);font-weight:600}
+.journal .line{display:flex;flex-direction:column;gap:6px;padding:8px 0;border-top:1px dashed var(--grid-strong)}
+.journal .line:first-of-type{border-top:0;padding-top:0}
+.journal select,.journal input{width:100%;border:2px solid var(--grid-strong);border-radius:var(--radius-s);padding:8px 10px;font-size:17px;background:#fff;min-height:44px}
+.journal input{text-align:right;font-variant-numeric:tabular-nums}
+.journal .sum{margin-top:8px;font-size:15px;color:var(--ink-soft);text-align:right;font-variant-numeric:tabular-nums}
+.jstatus{grid-column:1/-1;font-size:15px;color:var(--ink-soft);text-align:center}
+.jstatus.off{color:#B4472B}
+@media (max-width:560px){.journal{grid-template-columns:1fr}}
 .pad{touch-action:manipulation;cursor:crosshair}
 svg.pad:focus{outline:none}
 svg.pad:focus-visible{outline:3px solid var(--blue);outline-offset:4px;border-radius:4px}
@@ -461,6 +472,47 @@ function buildQuestion(q, host){
     box.append(svg, read); api.focus = () => svg.focus(); api.lock = () => svg.lock();
     return api;
   }
+  if (q.qtype === "journal"){
+    const wrap = document.createElement("div"); wrap.className = "journal"; host.appendChild(wrap);
+    const amt = v => { const f = frac(v); return f && f[1] === 1 ? f[0] : null; };
+    const won = n => n.toLocaleString("ko-KR");
+    const sides = {}, all = [];
+    const status = document.createElement("p"); status.className = "jstatus"; status.setAttribute("aria-live", "polite");
+    [["debit", "차변"], ["credit", "대변"]].forEach(([key, name]) => {
+      const box = document.createElement("div"); box.className = "side"; box.innerHTML = `<h3>${name}</h3>`;
+      const lines = [];
+      q.answer[key].forEach((_, k) => {
+        const line = document.createElement("div"); line.className = "line";
+        const sel = document.createElement("select"); sel.setAttribute("aria-label", `${name} ${k + 1}행 계정`);
+        sel.innerHTML = '<option value="">계정 선택</option>' + q.accounts.map(a => `<option>${a}</option>`).join("");
+        const inp = document.createElement("input"); inp.inputMode = "numeric"; inp.autocomplete = "off"; inp.placeholder = "금액";
+        inp.setAttribute("aria-label", `${name} ${k + 1}행 금액`);
+        [sel, inp].forEach(x => x.addEventListener(x === sel ? "change" : "input", upd));
+        inp.addEventListener("blur", () => { const n = amt(inp.value); if (n !== null) inp.value = won(n); });
+        line.append(sel, inp); box.appendChild(line); lines.push({sel, inp}); all.push(sel, inp);
+      });
+      const sum = document.createElement("div"); sum.className = "sum"; box.appendChild(sum);
+      sides[key] = {lines, sum}; wrap.appendChild(box);
+    });
+    wrap.appendChild(status);
+    const total = key => sides[key].lines.reduce((t, l) => t + (amt(l.inp.value) || 0), 0);
+    function upd(){
+      const d = total("debit"), c = total("credit");
+      sides.debit.sum.textContent = `합계 ${won(d)}`; sides.credit.sum.textContent = `합계 ${won(c)}`;
+      const filled = all.every(x => x.tagName === "SELECT" ? x.value : amt(x.value) !== null);
+      status.className = "jstatus" + (filled && d !== c ? " off" : "");
+      status.textContent = !filled ? "모든 칸을 채우세요" : d === c ? "차변과 대변 합계가 같습니다" : "차변과 대변 합계가 다릅니다";
+      api.ready = filled; if (api.onChange) api.onChange();
+    }
+    upd();
+    const sideOk = key => { const want = q.answer[key].map(([a, n]) => a + "|" + n).sort();
+      const got = sides[key].lines.map(l => l.sel.value + "|" + amt(l.inp.value)).sort(); return want.join() === got.join(); };
+    api.check = () => sideOk("debit") && sideOk("credit");
+    api.lock = () => all.forEach(x => x.disabled = true);
+    api.reveal = () => { ["debit", "credit"].forEach(key => sides[key].lines.forEach((l, k) => { l.sel.value = q.answer[key][k][0]; l.inp.value = won(q.answer[key][k][1]); })); upd(); };
+    api.focus = () => all[0].focus(); api.enter = all.filter(x => x.tagName === "INPUT");
+    return api;
+  }
   if (q.qtype === "written"){
     const t = document.createElement("textarea"); t.setAttribute("aria-label", "설명 쓰기"); t.placeholder = "자기 말로 설명해 보세요";
     t.addEventListener("input", () => { api.ready = t.value.trim().length >= 10; api.onChange(); });
@@ -489,6 +541,7 @@ function answerText(q){
   if (q.qtype === "numeric") return q.answer.replace(/^-/, "−");
   if (q.qtype === "fill_blank") return q.prompt.replace(/\{\{(\d+)\}\}/g, (m, n) => q.blanks[n - 1].answers[0]);
   if (q.qtype === "ordering"){ const t = Object.fromEntries(q.items.map(it => [it.id, it.text])); return q.answer_order.map(id => t[id]).join("  →  "); }
+  if (q.qtype === "journal"){ const f = l => l.map(([a, n]) => `${a} ${n.toLocaleString("ko-KR")}`).join(", "); return `(차) ${f(q.answer.debit)} / (대) ${f(q.answer.credit)}`; }
   if (q.qtype === "diagram") return q.widget === "number_line" ? fmt(q.answer.value) : `(${fmt(q.answer.x)}, ${fmt(q.answer.y)})`;
   return "";
 }
