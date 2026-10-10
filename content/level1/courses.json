@@ -36,19 +36,19 @@
       "id": "c6",
       "title": "세무 일반",
       "description": "조세의 개념, 국세기본법, 부가가치세, 소득세와 연말정산, 법인세, 지방세",
-      "available": false
+      "available": true
     },
     {
       "id": "c7",
       "title": "마케팅과 유통",
       "description": "소비자 행동, STP, 제품·가격·유통·촉진, 전자상거래",
-      "available": false
+      "available": true
     },
     {
       "id": "c8",
       "title": "무역 일반",
       "description": "무역의 원리와 정책, 국제수지와 환율, 무역 계약·결제·운송, 통관",
-      "available": false
+      "available": true
     }
   ]
 }
