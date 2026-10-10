@@ -134,7 +134,7 @@ const SUP = {"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6",
 function norm(s){
   return String(s).trim().replace(/\s+/g, "").replace(/[−–—]/g, "-")
     .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻₀₁₂₃₄₅₆₇₈₉]/g, c => SUP[c]).replace(/\^/g, "").replace(/×/g, "*")
-    .replace(/<=/g, "≤").replace(/>=/g, "≥").replace(/!=/g, "≠").replace(/°/g, "");
+    .replace(/<=/g, "≤").replace(/>=/g, "≥").replace(/!=/g, "≠").replace(/°/g, "").toLowerCase();
 }
 function frac(s){
   s = norm(s).replace(/^\+/, "").replace(/(\d),(?=\d{3}(\D|$))/g, "$1").replace(/(원|%|%p|명|개|배|대|시간|년|개월|달러|kg|점)$/, "");
