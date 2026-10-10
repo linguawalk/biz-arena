@@ -22,7 +22,8 @@ for k, r in sorted(rules.items(), key=lambda kv: kv[1]["review_by"]):
     due = datetime.date.fromisoformat(r["review_by"]); left = (due - today).days
     flag = "기한 지남" if left < 0 else ("임박" if left <= days else "정상")
     if flag != "정상": bad += 1
-    print(f"- [{flag}] {r['label']} = {r['value']:,}{r['unit']} (점검 기한 {due}, {left}일) / 사용 레슨 {len(usage.get(k, []))}개")
+    v = r['value']; vs = f"{v:,}{r['unit']}" if isinstance(v, (int, float)) else "표 " + str(len(v)) + "구간"
+    print(f"- [{flag}] {r['label']} = {vs} (점검 기한 {due}, {left}일) / 사용 레슨 {len(usage.get(k, []))}개")
     for lid in usage.get(k, []): print(f"    {lid}")
 unknown = set(usage) - set(rules)
 if unknown: print("rules.json에 없는 키:", unknown); bad += 1
