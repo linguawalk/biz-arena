@@ -63,11 +63,12 @@ def num(i, prompt, answer, expl, hint=None, fmt="integer", tol=0):
     return q
 
 
-def fill(i, prompt, blanks, expl, hint=None):
+def fill(i, prompt, blanks, expl, hint=None, groups=None):
     q = {"type": "question", "id": f"q{i}", "qtype": "fill_blank", "prompt": prompt,
          "blanks": [{"id": k + 1, "answers": a if isinstance(a, list) else [a]} for k, a in enumerate(blanks)],
          "explanation": expl}
     if hint: q["hint"] = hint
+    if groups: q["unordered_groups"] = groups
     return q
 
 
@@ -145,3 +146,19 @@ def write_tracks():
                 subs.append({"level": lv, "id": sid, "title": title, "available": ok})
         out["tracks"].append({"id": t["id"], "title": t["title"], "note": t["note"], "subjects": subs})
     json.dump(out, open(os.path.join(CONTENT, "guides.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+
+
+def L2LINK(track, sid, u):
+    """레벨2 가이드 단원 링크 (제목은 이미 만든 subject.json에서 읽음)"""
+    d = json.load(open(os.path.join(CONTENT, "level2", track, sid, "subject.json"), encoding="utf-8"))
+    ut = next(x["title"] for x in d["units"] if x["no"] == u)
+    return {"title": f"레벨2 {d['title']} · {u}단원 {ut}", "href": f"guide.html?lv=2&t={track}&s={sid}&u={u}"}
+
+
+def L1LINK(c, ch):
+    """레벨1 코스 챕터 링크 (코스·챕터 제목은 courses.json, course.json에서 읽음)"""
+    cs = json.load(open(os.path.join(CONTENT, "level1", "courses.json"), encoding="utf-8"))["courses"]
+    ct = next(x["title"] for x in cs if x["id"] == c)
+    d = json.load(open(os.path.join(CONTENT, "level1", c, "course.json"), encoding="utf-8"))
+    t = next(x["title"] for x in d["chapters"] if x["no"] == ch)
+    return {"title": f"레벨1 {ct} · 챕터 {ch} {t}", "href": f"browse.html?c={c}#ch{ch:02d}"}
