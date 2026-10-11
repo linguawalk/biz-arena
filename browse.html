@@ -47,7 +47,7 @@ nav .soon em{font-style:normal;font-size:13px;margin-left:auto;color:#7C889E}
 .items .review .t{font-weight:500}
 .items .review .state{border-radius:4px}
 .empty{padding:24px;border:2px dashed var(--grid-strong);border-radius:10px;color:var(--ink-soft);line-height:1.6}
-@media (max-width:760px){.layout{grid-template-columns:1fr;gap:24px}nav ol{flex-direction:row;overflow-x:auto;padding-bottom:6px}nav a,nav .soon{white-space:nowrap}.course-head h1{font-size:28px}}
+@media (max-width:760px){.layout{grid-template-columns:minmax(0,1fr);gap:24px}.layout>*{min-width:0}nav ol{flex-direction:row;overflow-x:auto;padding-bottom:6px}nav a,nav .soon{white-space:nowrap}.course-head h1{font-size:28px}}
 .plbox{margin:0 0 22px;padding:12px 14px;border-radius:8px;background:var(--blue-soft);font-size:15px;line-height:1.6}
 .plbox.ok{background:#E3F3EA}
 .plbox.start{background:var(--marker-soft);border-left:4px solid var(--marker)}
@@ -60,7 +60,7 @@ nav .soon em{font-style:normal;font-size:13px;margin-left:auto;color:#7C889E}
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="./"><span>biz-arena</span></a><span></span></div></header>
+<header><div class="wrap"><a class="logo" href="./"><span>biz-arena</span></a><span><a href="guide.html" style="font-size:15px;color:var(--blue)">레벨2·3 가이드</a></span></div></header>
 <div class="wrap layout">
   <nav aria-label="레벨1 코스"><h2>레벨1 코스</h2><ol id="courses"></ol></nav>
   <main id="main"></main>
