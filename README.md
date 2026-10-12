@@ -1,34 +1,97 @@
-# biz-arena
+# biz-arena 레슨 스키마 v1.0 (sci-arena·math-arena 공통 스키마)
 
-풀면서 배우는 경제·경영 사이트 (biz-arena.org). Arena 패밀리 사이트로, sci-arena와 같은 레슨 구조를 씁니다.
+경로: content/level{N}/{course}/ch{NN}/l{NN}.json
+- 코스 목록: content/level{N}/{course}/course.json
+- 챕터 목록: content/level{N}/{course}/ch{NN}/chapter.json
+- 챕터 복습 세트: content/level{N}/{course}/ch{NN}/review.json
 
-- 레벨1: 고교 「경제」·「금융과 경제생활」, 특성화고 상업·경영 전문교과 수준 8과목 (c1~c8), 공개: c1 경제, c2 금융생활, c3 경영 기초, c4 회계 원리, c5 회계 실무, c6 세무 일반, c7 마케팅과 유통, c8 무역 일반 (레벨1 전체 공개, 256레슨·4,492문항)
-- 레벨2: 대학 원론 9과목 독학 가이드 공개 (미시·거시경제원론, 경영학원론, 재무회계 입문, 원가·관리회계, 세법 입문, 재무관리 입문, 마케팅원론, 무역학원론; 과목당 8단원·자가 점검 32문항·선수 점검 4문항)
-- 레벨3: 7개 전공 트랙 29과목 독학 가이드 공개 (경제 5, 경영 4, 회계 5, 세무 4, 재무·금융 4, 마케팅·유통 4, 무역·국제경영 3; 과목당 8단원·자가 점검 24문항·선수 점검 3문항)
+## 레슨 파일
+- course / chapter / lesson: id, 번호, 제목 (lesson.minutes = 예상 소요 시간)
+- tags.domain: 학문 분과 태그(물리·화학·생명·지구·융합), tags.region, tags.curriculum
+- screens: 화면 배열. 순서대로 표시. stage = intro | discover | summary | apply
+- 분량 기준: 레슨당 화면 20~24개, 문항 15~17개
 
-## 구조
-- `index.html` 첫 화면, `browse.html` 코스 목록, `player.html` 레슨 플레이어, `guide.html` 레벨2·3 가이드
-- `content/level1/courses.json` 과목 목록 (`available`로 공개 여부 관리)
-- `content/level1/c{N}/ch{NN}/` 챕터별 레슨(l01~l04), 복습(review.json), chapter.json
-- `content/guides.json` 가이드 목록, `content/level2·level3/{트랙}/{과목}/` subject.json과 단원(u01~u08)
-- `content/rules.json` 바뀔 수 있는 법정·제도 수치(세율, 최저임금 등)를 한곳에서 관리
-- `tools/` 빌드·점검 도구 (사이트 동작에는 필요 없음)
+## 복습 세트 파일(review.json)
+- review: id, title, minutes
+- questions: 문항 10개(레슨 문항과 같은 형식), stage = review, source_lesson = 출제 레슨 id
+- 챕터의 모든 레슨에서 출제. 간격 복습과 진단 문항 풀로 재사용
 
-## 빌드와 점검
-```
-python3 tools/build_c1_ch01.py content      # 챕터 빌드 (ch01~ch08)
-python3 tools/make_course_index.py content   # course.json 갱신
-python3 tools/count.py tools/build_c1_ch01.py  # 빌드 전 레슨 분량 확인
-python3 -m http.server 8765 &                # 로컬 서버
-python3 tools/test_l1.py c1                  # 브라우저 점검: 모든 문항에 정답 입력 후 채점 확인
-python3 tools/guide_micro_principles.py      # 레벨2 가이드 빌드 (guide_*.py, guides.json 갱신)
-python3 tools/guide_l3_tax.py                # 레벨3 트랙 빌드 (guide_l3_{트랙}.py)
-python3 tools/make_guide.py                  # guide.html 생성
-python3 tools/test_guide.py 2                # 가이드 자가 점검 문항 브라우저 점검 (레벨3은 3)
-python3 tools/audit.py                       # 규정값 점검 기한 확인
-```
+## 화면 유형
+- explain: title, body(문단 배열), figure(선택, 정적 위젯: number_line, area_model, right_triangle, graph)
+  - area_model: config.rows / config.cols 에 변 이름 배열, 칸마다 행×열 넓이를 표시
+  - right_triangle: config.legs·hypotenuse(변 이름), squares(각 변 위 정사각형 표시), angle·labels(삼각비 기준각과 변 이름)
+- question: qtype별 필드
+  - numeric: answer(문자열), answer_format(integer | fraction | decimal), tolerance
+    - fraction은 동치 분수 허용 여부를 플레이어에서 결정(권장: 기약분수만 정답)
+  - fill_blank: prompt 안 {{n}} 자리, blanks[n].answers(허용 답 목록), unordered_groups(순서 무관 빈칸 묶음)
+    - 허용 답에는 마이너스(- / −)와 거듭제곱(² / ^2) 표기 변형이 미리 들어 있음
+    - 플레이어는 비교 전 공백 제거 권장
+  - ordering: items(표시 순서), answer_order(정답 id 순서)
+  - diagram: widget별 설정
+    - number_line: config(min, max, step), answer.value, answer.tolerance
+    - coordinate_plane: config(xmin, xmax, ymin, ymax, xstep, ystep), answer.x, answer.y, answer.tolerance
+  - journal(분개 입력형, biz-arena 추가): accounts(선택지 계정 목록), answer.debit / answer.credit([[계정, 금액], ...])
+    - 차변·대변 칸 수는 정답 줄 수와 같고, 칸마다 계정을 고르고 금액을 입력
+    - 채점: 차변·대변 각각 (계정, 금액) 쌍이 순서와 관계없이 정답과 같으면 통과
+    - 화면에 차변·대변 합계와 일치 여부를 바로 표시하고, 금액은 천 단위 쉼표 허용
+  - written: rubric(visibility=hidden, keyword_groups, min_groups_matched), model_answer
+    - 채점: 각 그룹 중 하나라도 포함되면 그룹 일치, 일치 그룹 수가 기준 이상이면 통과
+    - rubric은 화면에 노출하지 않음
+- 공통: hint(선택), explanation(정답 확인 후 표시), figure(선택, 문제 아래에 표시할 정적 그림)
 
-## 규정값 관리
-레슨에 법정 수치를 쓸 때는 숫자를 직접 적지 않고 `tools/rules.py`의 `rv("키")`로 불러옵니다.
-그 레슨에는 `"rules": ["키"]`를 적어 두면 레슨 파일에 점검 기한이 기록되고, `audit.py`가 기한이 다가온 항목과 해당 레슨을 보여 줍니다.
-값이 바뀌면 `rules.json`만 고친 뒤 해당 챕터를 다시 빌드합니다.
+## graph 위젯
+- config: xmin, xmax, ymin, ymax, xstep, ystep, curves, points(선택, [x, y, 라벨]), xpi(선택, true이면 x축 눈금을 π/2, π처럼 표시)
+- curves 종류(kind)
+  - poly: coef = 오름차순 계수 [c0, c1, c2, …]
+  - circle: cx, cy, r
+  - rational: y = k/(x − p) + q
+  - sqrt: y = a√(b(x − p)) + q
+  - abs: y = a|x − p| + q
+  - exp: y = a·b^(x − p) + q
+  - log: y = a·log_b(x − p) + q
+  - trig: y = a·fn(b(x − p)) + q, fn = sin | cos | tan
+  - vline: x / hline: y (점선, 점근선·경계 표시용)
+  - ellipse: 중심 (cx, cy), 반축 a(가로), b(세로)
+  - hyperbola: 중심 (cx, cy), a, b, axis = x(좌우로 열림) | y(위아래로 열림)
+  - parab_x: (y − cy)² = 4p(x − cx), 옆으로 열리는 포물선
+  - arrow: (x1, y1)에서 (x2, y2)로 향하는 화살표, label(선택)
+  - normal: 평균 m, 표준편차 s인 정규분포 밀도 곡선 (scale로 세로 배율 조정)
+  - shade: curve와 x축(또는 curve2) 사이를 from~to 구간에서 칠함 (넓이 표시용)
+  - 공통 선택 키: from, to(그릴 x 범위), color
+- coordinate_plane 문항도 config.curves를 넣으면 곡선 위에 점을 찍게 할 수 있음
+
+## geo 위젯 (도형 그림)
+- config: elements(요소 배열), alt(대체 텍스트), maxh(최대 높이)
+- 좌표는 수학 좌표(위쪽이 +y)이고, 전체 요소가 들어가도록 자동으로 크기를 맞춤
+- 요소(t)
+  - pt: 점 p, label(이름), pos(n/s/e/w/ne/nw/se/sw, 생략하면 도형 바깥쪽), hide(점 숨김)
+  - seg: 선분 a–b, dash(점선), hl(강조)
+  - poly: 다각형 pts, fill(false면 테두리만), hl(강조 색)
+  - circle: 중심 c, 반지름 r, dash
+  - right: 꼭짓점 p에서 a, b 방향 사이의 직각 표시
+  - arc: 꼭짓점 p에서 a, b 방향 사이의 각 표시, label, r(화면 픽셀 반지름)
+  - text: 위치 p에 글자 s (길이·기호 표시)
+- 입체(정육면체, 각뿔)는 제작 단계에서 (x, y, z) → (x + 0.5y, z + 0.32y)로 투영하고, 보이지 않는 모서리는 점선으로 그림
+- 도형 그림은 빌드 뒤 add_figs.py로 주입함. 레슨을 다시 생성하면 add_figs.py도 다시 실행할 것
+
+## 예제 화면(example)과 풀이 기준
+- example: title, problem(문제), steps(풀이 단계 배열), answer, figure(선택). 플레이어가 "풀이 보기 → 다음 단계"로 한 단계씩 펼침
+- explanation은 줄바꿈(\n)으로 단계를 나누면 번호 목록으로 표시됨
+- 보강을 마친 챕터는 엄격 검사(strict)를 켬: 모든 채점형 문항에 20자 이상 풀이, 적용·복습 문항에 힌트가 없으면 생성 실패
+- 보강 데이터는 enrich_c{코스}_ch{NN}.py에 두고 빌드 때 자동 적용
+
+## 단계별 기준(A·B·C)
+- A(코스 0): 풀이 20자 이상, 예제 레슨당 3개
+- B(코스 1·2): 풀이 40자 이상·2단계 이상, 설명 화면 110자 이상("왜 그런지" 문단 포함)
+- C(코스 3~6): 풀이 60자 이상·3단계 이상, 설명 화면 160자 이상
+- check_enrich.py로 보강 파일을 빌드 전에 검사할 수 있음
+
+
+## biz-arena 차이점
+- 채점 정규화: 숫자 답은 천 단위 쉼표(1,500,000)와 끝의 단위(원, %, %p, 명, 개, 배, 시간, 년, 개월, 달러, kg, 점)를 무시
+- 기호 입력줄: → ↑ ↓ −
+- graph 위젯: 곡선에 label(이름), label_at(붙일 x 위치), label_dx·label_dy(픽셀 보정)를 줄 수 있음. shade는 fill로 색 지정
+- 레슨 생성: tools/build_c{코스}_ch{NN}.py (공용 도구 tools/sk.py, 코스 공통 tools/c{코스}common.py)
+  - 레슨당 문항 15~17개, 화면 20~24개, 예제 3개, 채점형 문항 풀이 20자 이상, 적용·복습 문항 힌트 필수
+- 규정값: content/rules.json, 레슨의 lesson.review = {rules: [키], review_by: 점검 기한}
+- 코스 0과 진입 진단, 레벨2·3 가이드는 아직 없음
