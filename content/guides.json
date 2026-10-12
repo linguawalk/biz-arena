@@ -30,31 +30,31 @@
      "level": 3,
      "id": "intermediate-micro",
      "title": "중급미시경제",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "intermediate-macro",
      "title": "중급거시경제",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "econometrics",
      "title": "계량경제학 입문",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "money-banking",
      "title": "화폐금융론",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "public-economics",
      "title": "공공경제학",
-     "available": false
+     "available": true
     }
    ]
   },
@@ -73,25 +73,25 @@
      "level": 3,
      "id": "org-hrm",
      "title": "조직행동·인사관리",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "strategy",
      "title": "경영전략",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "operations",
      "title": "생산·운영관리",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "mis",
      "title": "경영정보시스템(MIS)",
-     "available": false
+     "available": true
     }
    ]
   },
@@ -116,31 +116,31 @@
      "level": 3,
      "id": "intermediate-acc1",
      "title": "중급회계Ⅰ",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "intermediate-acc2",
      "title": "중급회계Ⅱ",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "advanced-accounting",
      "title": "고급회계",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "auditing",
      "title": "회계감사",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "public-nonprofit",
      "title": "정부·비영리회계",
-     "available": false
+     "available": true
     }
    ]
   },
@@ -159,25 +159,25 @@
      "level": 3,
      "id": "corporate-tax",
      "title": "법인세법",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "income-tax",
      "title": "소득세법",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "vat",
      "title": "부가가치세법",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "basic-inheritance",
      "title": "국세기본법·상속세 및 증여세법",
-     "available": false
+     "available": true
     }
    ]
   },
@@ -196,25 +196,25 @@
      "level": 3,
      "id": "investments",
      "title": "투자론",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "derivatives",
      "title": "파생상품",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "financial-institutions",
      "title": "금융기관론",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "insurance-risk",
      "title": "보험·위험관리",
-     "available": false
+     "available": true
     }
    ]
   },
@@ -233,25 +233,25 @@
      "level": 3,
      "id": "consumer-behavior",
      "title": "소비자행동론",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "marketing-research",
      "title": "마케팅조사",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "digital-marketing",
      "title": "디지털마케팅",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "scm",
      "title": "유통·공급망관리(SCM)",
-     "available": false
+     "available": true
     }
    ]
   },
@@ -270,19 +270,19 @@
      "level": 3,
      "id": "trade-practice",
      "title": "무역실무(결제·운송·보험)",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "customs",
      "title": "관세와 통관",
-     "available": false
+     "available": true
     },
     {
      "level": 3,
      "id": "international-business",
      "title": "국제경영",
-     "available": false
+     "available": true
     }
    ]
   }
